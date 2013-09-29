@@ -7,6 +7,8 @@ import           Hakyll
 --------------------------------------------------------------------------------
 main :: IO ()
 main = hakyll $ do
+
+    -- Copy assets
     match "images/*" $ do
         route   idRoute
         compile copyFileCompiler
@@ -23,6 +25,7 @@ main = hakyll $ do
         route   idRoute
         compile compressCssCompiler
 
+    -- ..
     match (fromList ["about.rst", "contact.markdown"]) $ do
         route   $ setExtension "html"
         compile $ pandocCompiler
@@ -58,7 +61,7 @@ main = hakyll $ do
             let indexCtx =
                     listField "posts" postCtx (return posts) `mappend`
                     constField "title" "Home"                `mappend`
-                    defaultContext
+                    siteCtx
 
             getResourceBody
                 >>= applyAsTemplate indexCtx
@@ -69,6 +72,22 @@ main = hakyll $ do
 
 
 --------------------------------------------------------------------------------
+siteCtx :: Context String
+siteCtx =
+    constField "homeurl" "https://www.coffeebit.com.au" `mappend`
+    constField "brand" "Coffee Bit Australia" `mappend`
+    constField "tagline" "coffee, bitcoin, sydney, australia" `mappend`
+    constField "author" "edward" `mappend`
+    constField "email" "contact@coffeebit.com.au" `mappend`
+    constField "gplus" "gplus.to/coffeebit" `mappend`
+    constField "aboutme" "about.me/coffeebit" `mappend`
+    constField "twitter" "twitter.com/coffeebit" `mappend`
+    constField "github" "github.com/coffeebit" `mappend`
+    constField "flickr" "flic.kr/coffeebit" `mappend`
+    constField "youtube" "youtube.com/coffeebit" `mappend`
+    constField "vimeo" "vimeo.com/coffeebit" `mappend`
+    defaultContext
+
 postCtx :: Context String
 postCtx =
     dateField "date" "%B %e, %Y" `mappend`
